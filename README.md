@@ -1,4 +1,4 @@
-# React Directory
+# React Directory Next
 
 NextJS version of a react boilerplate to demonstrate usage of state, memo, callback, virtualization.
 
