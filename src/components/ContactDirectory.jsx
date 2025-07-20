@@ -2,6 +2,7 @@
 
 import { useMemo, useCallback, useState } from 'react'
 import { FixedSizeList as List } from 'react-window'
+import { useContactStore } from '../store/contactStore'
 
 const ITEM_HEIGHT = 60
 
@@ -21,15 +22,31 @@ export default function ContactDirectory({ contacts }) {
   }, [])
 
   const Row = ({ index, style }) => {
-    const contact = filtered[index]
+    const contact = filtered[index],
+          favorites = useContactStore((state) => state.favorites),
+          toggleFavorite = useContactStore((state) => state.toggleFavorite),
+          isFavorited = favorites.some((c) => c.id === contact.id)
 
     return (
       <div
         style={style}
-        onClick={() => handleSelect(contact)}
-        className="border-b px-4 py-2 cursor-pointer hover:bg-gray-100"
+        className="flex justify-between items-center border-b px-4 py-2"
       >
-        <strong>{contact.name}</strong> - {contact.email}
+        <div
+          style={style}
+          onClick={() => handleSelect(contact)}
+          className="border-b px-4 py-2 cursor-pointer hover:bg-gray-100"
+        >
+          <strong>{contact.name}</strong> - {contact.email}
+        </div>
+        <button
+          onClick={() => toggleFavorite(contact)}
+          className={`ml-4 text-sm ${
+            isFavorited ? 'text-yellow-500' : 'text-gray-400'            
+          }`}
+        >
+          *
+        </button>
       </div>
     )
   }
